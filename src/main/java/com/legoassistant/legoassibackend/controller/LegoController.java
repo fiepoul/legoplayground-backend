@@ -3,6 +3,7 @@ package com.legoassistant.legoassibackend.controller;
 import com.legoassistant.legoassibackend.service.LegoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/lego")
@@ -16,20 +17,21 @@ public class LegoController {
     }
 
     @PostMapping("/ideas")
-    public ResponseEntity<String> generateLegoIdeas(@RequestParam("imageUrl") String imageUrl) {
+    public ResponseEntity<String> generateLegoIdeas(@RequestParam("image") MultipartFile file) {
         try {
-            // Valider imageUrl
-            if (imageUrl == null || imageUrl.isBlank()) {
-                return ResponseEntity.badRequest().body("Image URL cannot be empty");
+            // Valider filen
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("File is empty");
             }
 
             // Kald LegoService for at generere idéer
-            String ideas = legoService.analyzeImageAndGenerateIdeas(imageUrl);
+            String ideas = legoService.analyzeImageFileAndGenerateIdeas(file);
 
             return ResponseEntity.ok(ideas);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }

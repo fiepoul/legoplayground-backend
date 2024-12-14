@@ -1,9 +1,13 @@
 package com.legoassistant.legoassibackend.controller;
 
+import com.legoassistant.legoassibackend.model.LegoPiece;
 import com.legoassistant.legoassibackend.service.AzureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -25,7 +29,12 @@ public class UploadController {
             }
 
             // Send filen til Azure-service for analyse
-            String result = azureService.predictFromFile(file);
+            List<LegoPiece> legoPieces = azureService.predictFromFile(file);
+
+            // Konverter listen til en String
+            String result = legoPieces.stream()
+                    .map(piece -> piece.getQuantity() + " x " + piece.getName())
+                    .collect(Collectors.joining("\n"));
 
             return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename() + "\n" + result);
         } catch (Exception e) {
