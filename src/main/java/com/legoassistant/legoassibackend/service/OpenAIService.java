@@ -4,6 +4,7 @@ import com.legoassistant.legoassibackend.dto.ChatRequest;
 import com.legoassistant.legoassibackend.dto.ChatResponse;
 import com.legoassistant.legoassibackend.dto.Message;
 import com.legoassistant.legoassibackend.model.LegoPiece;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -12,10 +13,10 @@ import java.util.List;
 @Service
 public class OpenAIService {
 
-    private final WebClient webClient;
+    private final WebClient openAiWebClient;
 
-    public OpenAIService(WebClient webClient) {
-        this.webClient = webClient;
+    public OpenAIService(@Qualifier("openAiWebClient") WebClient openAiWebClient) {
+        this.openAiWebClient = openAiWebClient;
     }
 
     public String getLegoIdeas(List<LegoPiece> legoPieces) {
@@ -35,7 +36,7 @@ public class OpenAIService {
         ChatRequest chatRequest = new ChatRequest("gpt-3.5-turbo", messages, 1, 1, 1000);
 
         // 4. Send forespørgsel til OpenAI og håndter svar
-        ChatResponse response = webClient.post()
+        ChatResponse response = openAiWebClient.post()
                 .bodyValue(chatRequest)
                 .retrieve()
                 .bodyToMono(ChatResponse.class)

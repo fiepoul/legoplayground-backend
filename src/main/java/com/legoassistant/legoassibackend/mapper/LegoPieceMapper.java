@@ -10,6 +10,7 @@ public class LegoPieceMapper {
 
     public static List<LegoPiece> mapToLegoPieces(List<PredictedLegoPiece> predictions) {
         return predictions.stream()
+                .filter(prediction -> prediction.getName() != null)
                 .collect(Collectors.groupingBy(PredictedLegoPiece::getName, Collectors.counting()))
                 .entrySet()
                 .stream()

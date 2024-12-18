@@ -22,6 +22,10 @@ public class WebClientConfig {
 
     @Bean
     public WebClient azureWebClient() {
+        if (azureEndpoint == null || azureKey == null) {
+            throw new IllegalArgumentException("Azure endpoint or key is not configured correctly.");
+        }
+
         return WebClient.builder()
                 .baseUrl(azureEndpoint)
                 .defaultHeader("Prediction-Key", azureKey) // Azure-specific header
