@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PredictedLegoPiece {
 
-    @JsonProperty("name")
+    @JsonProperty("tagName")
     private String name;
 
     @JsonProperty("probability")
