@@ -1,17 +1,8 @@
 package com.legoassistant.legoassibackend.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class LegoPiece {
-
-    @JsonProperty("tagName")
     private String name;
-
-    @JsonProperty("quantity")
     private int quantity;
-
-    public LegoPiece() {
-    }
 
     public LegoPiece(String name, int quantity) {
         this.name = name;
@@ -32,5 +23,13 @@ public class LegoPiece {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "LegoPiece{" +
+                "name='" + name + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }

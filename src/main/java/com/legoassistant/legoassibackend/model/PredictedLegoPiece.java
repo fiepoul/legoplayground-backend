@@ -8,21 +8,21 @@ public class PredictedLegoPiece {
     private String name;
 
     @JsonProperty("probability")
-    private String probability;
+    private float probability;
 
-    public String getName() {
+    public String getTagName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setTagName(String name) {
         this.name = name;
     }
 
-    public String getProbability() {
+    public float getProbability() {
         return probability;
     }
 
-    public void setProbability(String probability) {
+    public void setProbability(float probability) {
         this.probability = probability;
     }
 
