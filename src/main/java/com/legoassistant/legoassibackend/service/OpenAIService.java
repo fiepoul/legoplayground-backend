@@ -19,23 +19,20 @@ public class OpenAIService {
         this.openAiWebClient = openAiWebClient;
     }
 
-    public String getLegoIdeas(List<LegoPiece> legoPieces) {
-        // 1. Byg beskedindhold til OpenAI baseret på Azure-resultater
-        StringBuilder legoList = new StringBuilder("Here is the list of LEGO pieces detected:\n");
+    public String getLegoRecipe(List<LegoPiece> legoPieces) {
+        // Byg beskedindholdet fra den færdige liste
+        StringBuilder legoList = new StringBuilder("Here is the list of LEGO pieces:\n");
         for (LegoPiece piece : legoPieces) {
             legoList.append("- ").append(piece.getQuantity()).append(" x ").append(piece.getName()).append("\n");
         }
 
-        // 2. Definér roller og instruktioner som hardkodede beskeder
         List<Message> messages = List.of(
-                new Message("system", "You are a LEGO building assistant. Your job is to provide two things: (1) the full list of LEGO pieces detected and (2) a detailed recipe for a LEGO structure that can be built with these pieces."),
+                new Message("system", "You are a LEGO building assistant. Generate a detailed step-by-step LEGO structure recipe based on this list."),
                 new Message("user", legoList.toString())
         );
 
-        // 3. Opret ChatRequest til OpenAI
+        // Send forespørgsel til OpenAI
         ChatRequest chatRequest = new ChatRequest("gpt-3.5-turbo", messages, 1, 1, 1000);
-
-        // 4. Send forespørgsel til OpenAI og håndter svar
         ChatResponse response = openAiWebClient.post()
                 .bodyValue(chatRequest)
                 .retrieve()
@@ -46,7 +43,7 @@ public class OpenAIService {
             return response.getChoices().get(0).getMessage().getContent();
         }
 
-        return "Unable to generate LEGO ideas.";
+        return "Unable to generate LEGO recipe.";
     }
 }
 

@@ -1,9 +1,13 @@
 package com.legoassistant.legoassibackend.controller;
 
+import com.legoassistant.legoassibackend.model.LegoPiece;
 import com.legoassistant.legoassibackend.service.LegoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/lego")
@@ -17,22 +21,25 @@ public class LegoController {
     }
 
     @PostMapping("/ideas")
-    public ResponseEntity<String> generateLegoIdeas(@RequestParam("image") MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> generateLegoIdeas(@RequestParam("image") MultipartFile file) {
         try {
-            // Valider filen
+            System.out.println("Received file: " + file.getOriginalFilename());
             if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("File is empty");
+                return ResponseEntity.badRequest().body(Map.of("error", "File is empty"));
             }
 
-            // Kald LegoService for at generere idéer
-            String ideas = legoService.analyzeImageFileAndGenerateIdeas(file);
+            List<LegoPiece> legoPieces = legoService.analyzeImageFile(file); // Klodseliste fra Azure
+            System.out.println("Detected LEGO pieces: " + legoPieces);
+            String recipe = legoService.generateRecipe(legoPieces);
+            System.out.println("Generated recipe: " + recipe);// Opskrift fra OpenAI
 
-            return ResponseEntity.ok(ideas);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid input: " + e.getMessage());
+            return ResponseEntity.ok(Map.of(
+                    "legoList", legoPieces,
+                    "recipe", recipe
+            ));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 }

@@ -17,17 +17,13 @@ public class LegoService {
         this.openAIService = openAIService;
     }
 
-    public String analyzeImageFileAndGenerateIdeas(MultipartFile file) {
-        // 1. Få LEGO-klodser fra AzureService
-        List<LegoPiece> legoPieces = azureService.predictFromFile(file);
+    public List<LegoPiece> analyzeImageFile(MultipartFile file) {
+        return azureService.predictFromFile(file); // Hent og map klodselisten
+    }
 
-        // 2. Kontroller, om der blev fundet nogen LEGO-klodser
-        if (legoPieces == null || legoPieces.isEmpty()) {
-            throw new IllegalArgumentException("No LEGO pieces detected in the uploaded image.");
-        }
-
-        // 3. Generér LEGO-idéer fra OpenAIService
-        return openAIService.getLegoIdeas(legoPieces);
+    public String generateRecipe(List<LegoPiece> legoPieces) {
+        return openAIService.getLegoRecipe(legoPieces); // Send listen til OpenAI for opskriften
     }
 }
+
 
