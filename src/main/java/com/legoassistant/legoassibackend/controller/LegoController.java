@@ -28,10 +28,8 @@ public class LegoController {
                 return ResponseEntity.badRequest().body(Map.of("error", "File is empty"));
             }
 
-            List<LegoPiece> legoPieces = legoService.analyzeImageFile(file); // Klodseliste fra Azure
-            System.out.println("Detected LEGO pieces: " + legoPieces);
+            List<LegoPiece> legoPieces = legoService.analyzeImageFile(file);
             String recipe = legoService.generateRecipe(legoPieces);
-            System.out.println("Generated recipe: " + recipe);// Opskrift fra OpenAI
 
             return ResponseEntity.ok(Map.of(
                     "legoList", legoPieces,
