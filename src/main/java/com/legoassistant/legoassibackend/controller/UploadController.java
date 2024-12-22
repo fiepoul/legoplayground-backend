@@ -23,24 +23,17 @@ public class UploadController {
     @PostMapping("/upload")
     public ResponseEntity<String> handleFileUpload(@RequestParam("image") MultipartFile file) {
         try {
-            // Valider filen
-            if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("File is empty");
-            }
-
-            // Send filen til Azure-service for analyse
             List<LegoPiece> legoPieces = azureService.predictFromFile(file);
 
-            // Konverter listen til en String
             String result = legoPieces.stream()
                     .map(piece -> piece.getQuantity() + " x " + piece.getName())
                     .collect(Collectors.joining("\n"));
 
             return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename() + "\n" + result);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(500).body("File upload failed: " + e.getMessage());
         }
     }
 }
+
 

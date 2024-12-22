@@ -17,21 +17,22 @@ public class AzureService {
 
     private static final Logger logger = LoggerFactory.getLogger(AzureService.class);
     private static final double DEFAULT_THRESHOLD = 0.9;
-    private static final String ENDPOINT = "customvision/v3.0/Prediction/b27c8355-bb16-4a10-b060-aca7f168ab61/detect/iterations/Iteration6/image";
 
-    private final WebClient azureWebClient;
+    private final AzureApiClient azureApiClient;
+    private final ImagePredictionFilter predictionFilter;
 
-    public AzureService(WebClient azureWebClient) {
-        this.azureWebClient = azureWebClient;
+    public AzureService(AzureApiClient azureApiClient, ImagePredictionFilter predictionFilter) {
+        this.azureApiClient = azureApiClient;
+        this.predictionFilter = predictionFilter;
     }
 
     public List<LegoPiece> predictFromFile(MultipartFile file) {
         try {
-            validateFile(file);
+            FileValidator.validate(file);
 
-            AzurePredictionResponse response = callAzureApi(file);
+            AzurePredictionResponse response = azureApiClient.callAzureApi(file);
 
-            List<PredictedLegoPiece> filteredPredictions = filterPredictions(response, DEFAULT_THRESHOLD);
+            List<PredictedLegoPiece> filteredPredictions = predictionFilter.filter(response, DEFAULT_THRESHOLD);
 
             return LegoPieceMapper.mapToLegoPieces(filteredPredictions);
 
@@ -43,39 +44,8 @@ public class AzureService {
             throw new RuntimeException("Error processing the file: " + e.getMessage(), e);
         }
     }
-
-    private void validateFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Uploaded file is empty or null.");
-        }
-    }
-
-    private AzurePredictionResponse callAzureApi(MultipartFile file) {
-        try {
-            return azureWebClient.post()
-                    .uri(ENDPOINT)
-                    .header("Content-Type", "application/octet-stream")
-                    .bodyValue(file.getBytes())
-                    .retrieve()
-                    .bodyToMono(AzurePredictionResponse.class)
-                    .block();
-        } catch (Exception e) {
-            logger.error("Failed to call Azure API: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to call Azure API: " + e.getMessage(), e);
-        }
-    }
-
-    private List<PredictedLegoPiece> filterPredictions(AzurePredictionResponse response, double threshold) {
-        if (response == null || response.getPredictions() == null || response.getPredictions().isEmpty()) {
-            logger.warn("Azure returned no predictions or an empty response.");
-            throw new RuntimeException("Azure returned no predictions.");
-        }
-
-        return response.getPredictions().stream()
-                .filter(prediction -> prediction.getProbability() >= threshold)
-                .toList();
-    }
 }
+
 
 
 
