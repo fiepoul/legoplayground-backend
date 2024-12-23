@@ -61,18 +61,13 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-resolver-dns-native-macos</artifactId>
-            <version>4.1.72.Final</version> <!-- Brug en version der matcher dit setup -->
+            <version>4.1.72.Final</version>
             <classifier>osx-x86_64</classifier>
         </dependency>
         <dependency>
             <groupId>com.azure</groupId>
             <artifactId>azure-ai-formrecognizer</artifactId>
             <version>4.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-ai-formrecognizer</artifactId>
-            <version>3.0.0</version>
         </dependency>
     </dependencies>
 
