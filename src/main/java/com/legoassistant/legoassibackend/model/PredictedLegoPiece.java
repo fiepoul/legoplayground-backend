@@ -10,6 +10,11 @@ public class PredictedLegoPiece {
     @JsonProperty("probability")
     private float probability;
 
+    public PredictedLegoPiece(String name, float probability) {
+        this.name = name;
+        this.probability = probability;
+    }
+
     public String getTagName() {
         return name;
     }
