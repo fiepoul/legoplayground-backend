@@ -2,13 +2,22 @@ package com.legoassistant.legoassibackend.service;
 
 import com.legoassistant.legoassibackend.dto.AzurePredictionResponse;
 import com.legoassistant.legoassibackend.model.PredictedLegoPiece;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImagePredictionFilterTest {
+
+    @BeforeEach
+    void setup() {
+        // Set up mock environment variables or system properties
+        System.setProperty("AZURE_AI_KEY", "test_key");
+    }
     @Test
     void filter_validResponseWithThreshold_returnsFilteredPredictions() {
         // Arrange

@@ -78,6 +78,19 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <AZURE_AI_KEY>test_azure_key</AZURE_AI_KEY>
+                        <AZURE_ENDPOINT>http://test-azure-endpoint</AZURE_ENDPOINT>
+                        <OPENAI_API_KEY>test_openai_key</OPENAI_API_KEY>
+                        <OPENAI_ENDPOINT>http://test-openai-endpoint</OPENAI_ENDPOINT>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>3.3.1</version>
