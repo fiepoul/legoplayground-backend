@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://lego-assistant-backend-fge3cnabetgmc6ep.westeurope-01.azurewebsites.net"})
 public class UploadController {
 
     private final AzureService azureService;
