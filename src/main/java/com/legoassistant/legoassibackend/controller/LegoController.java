@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/lego")
-@CrossOrigin(origins = {"http://localhost:3000", "https://lego-assistant-backend-fge3cnabetgmc6ep.westeurope-01.azurewebsites.net"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://kind-glacier-01c961903.4.azurestaticapps.net"})
 public class LegoController {
 
     private final LegoService legoService;
