@@ -28,6 +28,7 @@ public class LegoController {
                 return ResponseEntity.badRequest().body(Map.of("error", "File is empty"));
             }
 
+
             List<LegoPiece> legoPieces = legoService.analyzeImageFile(file);
             String recipe = legoService.generateRecipe(legoPieces);
 

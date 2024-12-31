@@ -4,12 +4,17 @@ import com.legoassistant.legoassibackend.dto.AzurePredictionResponse;
 import com.legoassistant.legoassibackend.mapper.LegoPieceMapper;
 import com.legoassistant.legoassibackend.model.LegoPiece;
 import com.legoassistant.legoassibackend.model.PredictedLegoPiece;
+import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @Service
@@ -43,6 +48,23 @@ public class AzureService {
             logger.error("Error during Azure prediction: {}", e.getMessage(), e);
             throw new RuntimeException("Error processing the file: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Komprimerer et billede repræsenteret som byte array.
+     * @param imageBytes Billedet som byte array
+     * @return Det komprimerede billede som byte array
+     */
+
+    /**
+     * Sender det komprimerede billede til Azure's predictions service.
+     * @param imageBytes Det komprimerede billede som byte array
+     * @return Resultatet af analysen
+     */
+    private String predictFromBytes(byte[] imageBytes) {
+        // Her ville du implementere den logik, der sender billedet til Azure og får et svar
+        // Dette er en placeholder
+        return "Azure prediction result";
     }
 }
 
