@@ -10,15 +10,16 @@ public class FileValidator {
 
     public static void validate(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new FileProcessingException("Uploaded file is invalid.");
+            throw new FileProcessingException("Uploaded file cannot be null or empty.");
         }
+
         validateImage(file);
     }
 
     private static void validateImage(MultipartFile file) {
         try {
             if (ImageIO.read(file.getInputStream()) == null) {
-                throw new FileProcessingException("File is not a valid image.");
+                throw new FileProcessingException("Uploaded file is not a valid image.");
             }
         } catch (IOException e) {
             throw new FileProcessingException("Error while reading the file.", e);
