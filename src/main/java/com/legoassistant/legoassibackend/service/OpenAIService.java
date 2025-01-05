@@ -31,7 +31,7 @@ public class OpenAIService {
                         "\n" +
                         "1. Start the response with a short(maximum two words) and fun headline for the recipe. Format it as follows: **Headline Name**\n" +
                         "2. Do not include any additional descriptions or explanations outside of the steps.\n" +
-                        "3. Write each step as one or two sentence and make them inviting. Begin each step with **Step X:**, where X is the step number, followed by the instructions. minimum steps are four\n" +
+                        "3. Write each step as one or two sentence and make them inviting. Begin each step with 'Step X:', where X is the step number, followed by the instructions. Each step should be concise in structure. The amount of steps are four\n" +
                         "4. Do not include any other text, comments, or unnecessary details."),
                 new Message("user", legoList.toString())
         );

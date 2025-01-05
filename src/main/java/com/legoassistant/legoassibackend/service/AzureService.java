@@ -1,6 +1,7 @@
 package com.legoassistant.legoassibackend.service;
 
 import com.legoassistant.legoassibackend.dto.AzurePredictionResponse;
+import com.legoassistant.legoassibackend.exception.FileProcessingException;
 import com.legoassistant.legoassibackend.mapper.LegoPieceMapper;
 import com.legoassistant.legoassibackend.model.LegoPiece;
 import com.legoassistant.legoassibackend.model.PredictedLegoPiece;
@@ -20,7 +21,6 @@ import java.util.List;
 @Service
 public class AzureService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AzureService.class);
     private static final double DEFAULT_THRESHOLD = 0.9;
 
     private final AzureApiClient azureApiClient;
@@ -32,39 +32,19 @@ public class AzureService {
     }
 
     public List<LegoPiece> predictFromFile(MultipartFile file) {
-        try {
-            FileValidator.validate(file);
+        AzurePredictionResponse response = azureApiClient.callAzureApi(file);
 
-            AzurePredictionResponse response = azureApiClient.callAzureApi(file);
-
-            List<PredictedLegoPiece> filteredPredictions = predictionFilter.filter(response, DEFAULT_THRESHOLD);
-
-            return LegoPieceMapper.mapToLegoPieces(filteredPredictions);
-
-        } catch (IllegalArgumentException e) {
-            logger.error("Invalid input: {}", e.getMessage());
-            throw e;
-        } catch (Exception e) {
-            logger.error("Error during Azure prediction: {}", e.getMessage(), e);
-            throw new RuntimeException("Error processing the file: " + e.getMessage(), e);
+        if (response == null || response.getPredictions() == null || response.getPredictions().isEmpty()) {
+            throw new FileProcessingException("No predictions found.");
         }
-    }
 
-    /**
-     * Komprimerer et billede repræsenteret som byte array.
-     * @param imageBytes Billedet som byte array
-     * @return Det komprimerede billede som byte array
-     */
+        List<PredictedLegoPiece> filteredPredictions = predictionFilter.filter(response, DEFAULT_THRESHOLD);
 
-    /**
-     * Sender det komprimerede billede til Azure's predictions service.
-     * @param imageBytes Det komprimerede billede som byte array
-     * @return Resultatet af analysen
-     */
-    private String predictFromBytes(byte[] imageBytes) {
-        // Her ville du implementere den logik, der sender billedet til Azure og får et svar
-        // Dette er en placeholder
-        return "Azure prediction result";
+        if (filteredPredictions.isEmpty()) {
+            throw new FileProcessingException("No predictions met the threshold.");
+        }
+
+        return LegoPieceMapper.mapToLegoPieces(filteredPredictions);
     }
 }
 

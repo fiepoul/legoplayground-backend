@@ -1,5 +1,6 @@
 package com.legoassistant.legoassibackend.service;
 
+import com.legoassistant.legoassibackend.exception.FileProcessingException;
 import com.legoassistant.legoassibackend.model.LegoPiece;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public class LegoService {
      * @return a list of LEGO pieces
      */
     public List<LegoPiece> analyzeImageFile(MultipartFile file) {
-        validateFile(file);
+        FileValidator.validate(file);
         return azureService.predictFromFile(file);
     }
 
@@ -33,20 +34,7 @@ public class LegoService {
      * @return a recipe as a string
      */
     public String generateRecipe(List<LegoPiece> legoPieces) {
-        if (legoPieces == null || legoPieces.isEmpty()) {
-            throw new IllegalArgumentException("LEGO pieces list cannot be null or empty.");
-        }
         return openAIService.getLegoRecipe(legoPieces);
-    }
-
-    /**
-     * Validates the input file to ensure it's not empty.
-     * @param file the file to validate
-     */
-    private void validateFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Uploaded file is empty or null.");
-        }
     }
 }
 

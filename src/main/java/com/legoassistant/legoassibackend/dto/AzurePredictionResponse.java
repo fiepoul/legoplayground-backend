@@ -22,6 +22,9 @@ public class AzurePredictionResponse {
     }
 
     public List<PredictedLegoPiece> filterPredictionsByProbability(double threshold) {
+        if (predictions == null) {
+            return List.of();
+        }
         return predictions.stream()
                 .filter(prediction -> prediction.getProbability() > threshold)
                 .collect(Collectors.toList());

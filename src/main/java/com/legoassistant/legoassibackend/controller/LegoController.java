@@ -1,5 +1,6 @@
 package com.legoassistant.legoassibackend.controller;
 
+import com.legoassistant.legoassibackend.exception.FileProcessingException;
 import com.legoassistant.legoassibackend.model.LegoPiece;
 import com.legoassistant.legoassibackend.service.LegoService;
 import org.springframework.http.ResponseEntity;
@@ -23,23 +24,25 @@ public class LegoController {
     @PostMapping("/ideas")
     public ResponseEntity<Map<String, Object>> generateLegoIdeas(@RequestParam("image") MultipartFile file) {
         try {
-            System.out.println("Received file: " + file.getOriginalFilename());
-            if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "File is empty"));
-            }
-
-
+            // Validate and process the file
             List<LegoPiece> legoPieces = legoService.analyzeImageFile(file);
             String recipe = legoService.generateRecipe(legoPieces);
 
+            // Return the response
             return ResponseEntity.ok(Map.of(
                     "legoList", legoPieces,
                     "recipe", recipe
             ));
+        } catch (FileProcessingException e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", e.getMessage()
+            ));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of(
+                    "error", "An unexpected error occurred"
+            ));
         }
     }
 }
+
 

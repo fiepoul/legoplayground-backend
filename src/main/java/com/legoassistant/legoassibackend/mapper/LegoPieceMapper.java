@@ -9,14 +9,13 @@ import java.util.stream.Collectors;
 public class LegoPieceMapper {
 
     public static List<LegoPiece> mapToLegoPieces(List<PredictedLegoPiece> predictions) {
-        // Gruppér efter tagName og tæl forekomsterne
         return predictions.stream()
-                .filter(prediction -> prediction.getTagName() != null) // Filtrér null-navne
-                .collect(Collectors.groupingBy(PredictedLegoPiece::getTagName, Collectors.counting())) // Gruppér og tæl
+                .filter(prediction -> prediction.getTagName() != null)
+                .collect(Collectors.groupingBy(PredictedLegoPiece::getTagName, Collectors.counting())) // Group and counting
                 .entrySet()
                 .stream()
-                .map(entry -> new LegoPiece(entry.getKey(), entry.getValue().intValue())) // Map til LegoPiece
-                .collect(Collectors.toList()); // Saml som en liste
+                .map(entry -> new LegoPiece(entry.getKey(), entry.getValue().intValue())) // Map to LegoPiece
+                .collect(Collectors.toList()); // collect list
     }
 }
 
