@@ -20,7 +20,7 @@ public class OpenAIService {
     }
 
     public String getLegoRecipe(List<LegoPiece> legoPieces) {
-        // Byg beskedindholdet fra den færdige liste
+        // build message
         StringBuilder legoList = new StringBuilder("Here is the list of LEGO pieces:\n");
         for (LegoPiece piece : legoPieces) {
             legoList.append("- ").append(piece.getQuantity()).append(" x ").append(piece.getName()).append("\n");
@@ -36,7 +36,7 @@ public class OpenAIService {
                 new Message("user", legoList.toString())
         );
 
-        // Send forespørgsel til OpenAI
+        // request to OpenAI
         ChatRequest chatRequest = new ChatRequest("gpt-3.5-turbo", messages, 1, 1, 1000);
         ChatResponse response = openAiWebClient.post()
                 .bodyValue(chatRequest)
