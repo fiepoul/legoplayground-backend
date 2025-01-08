@@ -50,7 +50,7 @@ jobs:
 
       # 7. Deploy til Azure
       - name: Deploy to Azure
-        uses: azure/webapps-deploy@v4
+        uses: azure/webapps-deploy@v3
         with:
           app-name: lego-assistant-backend
           slot-name: production

@@ -21,6 +21,7 @@ public class LegoController {
         this.legoService = legoService;
     }
 
+    //endpoint when picture upload
     @PostMapping("/ideas")
     public ResponseEntity<Map<String, Object>> generateLegoIdeas(@RequestParam("image") MultipartFile file) {
         try {
