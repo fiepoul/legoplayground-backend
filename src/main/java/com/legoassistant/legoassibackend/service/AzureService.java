@@ -5,17 +5,8 @@ import com.legoassistant.legoassibackend.exception.FileProcessingException;
 import com.legoassistant.legoassibackend.mapper.LegoPieceMapper;
 import com.legoassistant.legoassibackend.model.LegoPiece;
 import com.legoassistant.legoassibackend.model.PredictedLegoPiece;
-import org.imgscalr.Scalr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @Service
